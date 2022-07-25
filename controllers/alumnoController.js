@@ -12,6 +12,8 @@ const getAllAlumnos = async (req, res) => {
 }
 
 const createAlumno = async (req, res) => {
+
+    const {nombre, edad, email} = req.body;
   
     if(!nombre || !edad || !email) {
         return res.status(401).json({message: 'Error debe ingresar nombre y edad'});
@@ -57,16 +59,18 @@ const updateAlumno = async (req, res) => {
 
     try {
         const emailDuplicated = await Alumno.findOne({email: email});
-        const alumno2 = await Alumno.findOne({_id: id});
-        console.log(alumno2._id);
-        console.log(emailDuplicated._id);
-        console.log(emailDuplicated);
+        const alumno = await Alumno.findOne({_id: id});
+        
+
+        if(!alumno) {
+            return res.status(204).json({message: 'No hay alumno con ese ID'});
+        }
 
         if(emailDuplicated && alumno2._id.toString() != emailDuplicated._id.toString()) {
             return res.status(409).json({message: `El email ${emailDuplicated.email} ya se encuentra en uso`});
         }
 
-        const alumno = await Alumno.findByIdAndUpdate(id, {nombre: nombre, edad: edad, email:email});
+        const modifyAlumno = await Alumno.findByIdAndUpdate(id, {nombre: nombre, edad: edad, email:email});
         
         res.status(200).json({message: 'Alumno modificado'});
     } catch (err) {
