@@ -12,17 +12,19 @@ const getAllAlumnos = async (req, res) => {
 }
 
 const createAlumno = async (req, res) => {
-    const {nombre, edad, email} = req.body
-    if(!nombre || !edad) return res.status(401).json({message: 'Error debe ingresar nombre y edad'});
+  
+    if(!nombre || !edad || !email) {
+        return res.status(401).json({message: 'Error debe ingresar nombre y edad'});
+    }
 
     try {
         const emailDuplicated = await Alumno.findOne({email: email});
         if(emailDuplicated) {
-            return res.redirect('/');
+            return res.status(409).json({message: `El email ${emailDuplicated.email} ya se encuentra en uso`});
         }
 
         const alumno = await Alumno.create({nombre: nombre, edad: edad, email: email});
-        res.redirect('/');
+        res.status(200).json({message: 'Alumno creado'});
     } catch (err) {
         console.log(err + 'error al mostrar los alumnos');
         return res.status(500).json({message: 'Error mostrando los alumnos'});
@@ -41,7 +43,7 @@ const deleteAlumno = async (req, res) => {
         }
 
         const alumnoDeleted = await Alumno.deleteOne({_id: req.params.id});
-        res.redirect(303, '/');
+        res.status(200).json({message: 'Alumno eliminado'});
     } catch (err) {
         console.log(err + 'error al eliminar el alumno');
         return res.status(500).json({message: 'Error mostrando los alumnos'});
@@ -55,12 +57,18 @@ const updateAlumno = async (req, res) => {
 
     try {
         const emailDuplicated = await Alumno.findOne({email: email});
-        if(emailDuplicated) {
-            return res.redirect('/')
+        const alumno2 = await Alumno.findOne({_id: id});
+        console.log(alumno2._id);
+        console.log(emailDuplicated._id);
+        console.log(emailDuplicated);
+
+        if(emailDuplicated && alumno2._id.toString() != emailDuplicated._id.toString()) {
+            return res.status(409).json({message: `El email ${emailDuplicated.email} ya se encuentra en uso`});
         }
 
         const alumno = await Alumno.findByIdAndUpdate(id, {nombre: nombre, edad: edad, email:email});
-        res.redirect('/');
+        
+        res.status(200).json({message: 'Alumno modificado'});
     } catch (err) {
         console.log(err + 'error al mostrar los alumnos');
         return res.status(500).json({message: 'Error mostrando los alumnos'});
