@@ -66,7 +66,7 @@ const updateAlumno = async (req, res) => {
             return res.status(204).json({message: 'No hay alumno con ese ID'});
         }
 
-        if(emailDuplicated && alumno2._id.toString() != emailDuplicated._id.toString()) {
+        if(emailDuplicated && alumno._id.toString() != emailDuplicated._id.toString()) {
             return res.status(409).json({message: `El email ${emailDuplicated.email} ya se encuentra en uso`});
         }
 
