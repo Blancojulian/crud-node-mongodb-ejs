@@ -16,7 +16,7 @@ const createAlumno = async (req, res) => {
     const {nombre, edad, email} = req.body;
   
     if(!nombre || !edad || !email) {
-        return res.status(401).json({message: 'Error debe ingresar nombre y edad'});
+        return res.status(401).json({message: 'Error debe ingresar los datos del alumno'});
     }
 
     try {
@@ -28,8 +28,8 @@ const createAlumno = async (req, res) => {
         const alumno = await Alumno.create({nombre: nombre, edad: edad, email: email});
         res.status(200).json({message: 'Alumno creado'});
     } catch (err) {
-        console.log(err + 'error al mostrar los alumnos');
-        return res.status(500).json({message: 'Error mostrando los alumnos'});
+        console.log(err + 'Error al crear el alumno');
+        return res.status(500).json({message: 'Error creando el alumno'});
     }
 }
 
@@ -48,7 +48,7 @@ const deleteAlumno = async (req, res) => {
         res.status(200).json({message: 'Alumno eliminado'});
     } catch (err) {
         console.log(err + 'error al eliminar el alumno');
-        return res.status(500).json({message: 'Error mostrando los alumnos'});
+        return res.status(500).json({message: 'Error al eliminar el alumno'});
     }
 }
 
@@ -74,8 +74,8 @@ const updateAlumno = async (req, res) => {
         
         res.status(200).json({message: 'Alumno modificado'});
     } catch (err) {
-        console.log(err + 'error al mostrar los alumnos');
-        return res.status(500).json({message: 'Error mostrando los alumnos'});
+        console.log(err + 'error al modificar el alumno');
+        return res.status(500).json({message: 'Error al modificar el alumno'});
     }
 }
 
@@ -88,8 +88,8 @@ const getAlumno = async (req, res) => {
 
         return res.status(200).json({alumno: alumno});
     } catch (err) {
-        console.log(err + 'error al eliminar el alumno');
-        return res.status(500).json({message: 'Error mostrando los alumnos'});
+        console.log(err + 'error al mostrar el alumno');
+        return res.status(500).json({message: 'Error mostrando el alumno'});
     }
 }
 module.exports = {
